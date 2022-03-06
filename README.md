@@ -1,8 +1,8 @@
 # Beer Labels
 
-Easy-edit web labels
+Easy-edit 4x6inch web labels for cans
 
-Works with Avery 5264 and 5524 Labels
+Supports DYMO LabelWriter 4XL
 
 ## Installing
 
