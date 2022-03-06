@@ -1,55 +1,19 @@
--
-  var beers = [
-    {
-      title: 'Name',
-      description: 'description',
-    },
-    {
-      title: 'Name',
-      description: 'description',
-    },
-    {
-      title: 'Name',
-      description: 'description',
-    },
-    {
-      title: 'Name',
-      description: 'description',
-    },
-    {
-      title: 'Name',
-      description: 'description',
-    },
-    {
-      title: 'Name',
-      description: 'description',
-    },
-  ]
 doctype html
 head
-  title 3.3inch x 4inch labels
+  title Beer labels
   meta(http-equiv='content-type' content='text/html; charset=utf-8')
   link(href='app/app.css' media='screen, projection, print' rel='stylesheet' type='text/css')
   link(href='app/buttons.css' media='screen' rel='stylesheet' type='text/css')
   link(rel='icon' type='image/svg+xml' href='app/img/Lower Level icon.svg')
   script(src='app/app.js')
 body#app
-  .control-panel
-    div
-      button.button.toggle(onclick="toggle()" title="Orientation")
-        i.orientation
-    div
-      input.file-upload(type='file' onchange="readURL(this)" title="Upload File")
-    #title-adjust
-      label(for="title") Title Size
-      input.font-adjust(type="number" id="title" value="50")
-    #description-adjust
-      label(for="description") Description Size
-      input.font-adjust(type="number" id="description" value="16")
   #main.page
-    each beer, key in beers
-      .label(id=key)
-        h1.title(contenteditable="true" id='title'+key class='content')= beer.title
-        figcaption.description(contenteditable="true" id='description'+key class='content')= beer.description
-        img.image-upload(src)
-        img.image(src="app/img/Lower Level.svg")
+    .label
+      input(contenteditable="true" id='title' type='text' class='content' placeholder='Name')
+      input(contenteditable="true" id='description' type='text' class='content bold' placeholder='Description')
+      input(contenteditable="true" id='style' type='text' class='content' placeholder='Style')
+      input(contenteditable="true" id='alcohol-content' type='text' class='content' placeholder='abv')
+      img.image-upload(src)
+      img.image(src="app/img/Lolev_logo.svg")
+    footer
+      .sharelink

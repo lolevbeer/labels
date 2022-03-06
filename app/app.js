@@ -1,64 +1,84 @@
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener('DOMContentLoaded', function(event) {
 
   let content = document.getElementsByClassName('content'),
       adjust = document.getElementsByClassName('font-adjust'),
       contentArray = Array.from(content),
       adjustArray = Array.from(adjust);
 
-  contentArray.forEach((item) => {
-    localStore.loadContent(item);
-    item.addEventListener(
-      'blur', () => {
-        localStore.saveContent(item);
-      }, false
-    );
-  });
-
-  adjustArray.forEach((item) => {
-    item.addEventListener(
-      'click', () => {
-        let adjustThese = document.getElementsByClassName(item.id);
-        for (var i = 0; i < adjustThese.length; i++) {
-          adjustThese[i].style.fontSize = item.value + "px";
-        }
-      }, false
-    );
-  });
-
+  if (paramStore.check(window.location.href)) {
+    contentArray.forEach((item) => {
+      paramStore.loadContent(item);
+    });
+  }
+  else {
+    contentArray.forEach((item) => {
+      localStore.loadContent(item);
+      item.addEventListener(
+        'blur', () => {
+          localStore.saveContent(item);
+          paramStore.saveContent(item);
+          if (item.id == 'title') {
+            document.title = "Beer Label: " + item.value;
+          }
+        }, false
+      );
+      item.addEventListener(
+        'keydown', (keydown) => {
+          if (keydown.keyCode===13) {
+            item.blur();
+          }
+        }, false
+      );
+    });
+  }
 });
 
 let localStore = {
   saveContent: (item) => {
-    localStorage.setItem(item.id, item.innerHTML);
+    localStorage.setItem(item.id, item.value);
   },
   loadContent: (item) => {
+    // If url paramters override.
     let content = localStorage.getItem(item.id);
     if (content) {
-      item.innerHTML = content;
+      item.value = content;
     }
+    paramStore.saveContent(item);
   },
-
 };
 
-let toggle = () => {
-  let element = document.getElementById('app');
-  element.classList.toggle('portrait');
-}
+let paramStore = {
+  check: (url) => {
+    let params = new URL(url).searchParams;
+    let title = params.get('title');
+    let description = params.get('description');
+    let style = params.get('style');
+    let alcoholContent = params.get('alcohol-content');
+    return title && description && style && alcoholContent;
+  },
+  saveContent: (item) => {
+    let shareLink = document.getElementsByClassName('sharelink'),
+        url;
 
-function readURL(input) {
-  console.log(input.files)
-  if (input.files && input.files[0]) {
-    var reader = new FileReader();
-    console.log(reader)
-    reader.onload = function (e) {
-      var x = document.getElementsByClassName("image-upload");
-      for (var i=0; i < x.length; i++) {
-        x[i].setAttribute(
-          'src',
-          e.target.result
-        );
-      }
+    if (!window.shareLink) {
+      window.shareLink = new URL(window.location.href).searchParams;
     }
-    reader.readAsDataURL(input.files[0]);
-  };
-}
+    window.shareLink.set(item.id, item.value);
+    url = window.location.origin+'?'+window.shareLink;
+    console.log(url);
+    if (paramStore.check(url)) {
+      shareLink[0].innerHTML = url.toString();
+    }
+    else {
+      shareLink[0].innerHTML = '';
+    }
+  },
+  loadContent: (item) => {
+    let params = new URL(window.location.href).searchParams;
+    // If url paramters override.
+    let content = params.get(item.id);
+    if (content) {
+      item.value = content;
+    }
+  },
+};

@@ -8,29 +8,34 @@
   color: #555;
   letter-spacing: 1px;
   margin: 1rem;
-  -webkit-transition: all .1s linear;
-  -o-transition: all .1s linear;
-  transition: all .1s linear;
+  -webkit-transition: all 0.1s linear;
+  -o-transition: all 0.1s linear;
+  transition: all 0.1s linear;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
-          user-select: none; }
-  .button.green {
-    background-color: rgba(0, 255, 0, 0.05); }
-  .button.red {
-    background-color: rgba(255, 0, 0, 0.05); }
+          user-select: none;
+}
+.button.green {
+  background-color: rgba(0, 255, 0, 0.05);
+}
+.button.red {
+  background-color: rgba(255, 0, 0, 0.05);
+}
 
 .button:hover {
   -webkit-box-shadow: -0.5px -0.5px 1px 0 rgba(230, 230, 230, 0.7), 0.5px 0.5px 1px 0 rgba(171, 171, 171, 0.7), inset 0.5px 0.5px 1px 0 rgba(230, 230, 230, 0.7), inset -0.5px -0.5px 1px 0 rgba(171, 171, 171, 0.7);
           box-shadow: -0.5px -0.5px 1px 0 rgba(230, 230, 230, 0.7), 0.5px 0.5px 1px 0 rgba(171, 171, 171, 0.7), inset 0.5px 0.5px 1px 0 rgba(230, 230, 230, 0.7), inset -0.5px -0.5px 1px 0 rgba(171, 171, 171, 0.7);
   -webkit-transform: translateY(0.5px);
       -ms-transform: translateY(0.5px);
-          transform: translateY(0.5px); }
+          transform: translateY(0.5px);
+}
 
 .button:active {
   -webkit-box-shadow: -0.75px -0.75px 1.5px 0 #ABABAB, 0.75px 0.75px 1.5px 0 #E6E6E6, inset 0.75px 0.75px 1.5px 0 #ABABAB, inset -0.75px -0.75px 1.5px 0 #E6E6E6;
           box-shadow: -0.75px -0.75px 1.5px 0 #ABABAB, 0.75px 0.75px 1.5px 0 #E6E6E6, inset 0.75px 0.75px 1.5px 0 #ABABAB, inset -0.75px -0.75px 1.5px 0 #E6E6E6;
   color: #666;
-  -webkit-transition: all .1s linear 0s;
-  -o-transition: all .1s linear 0s;
-  transition: all .1s linear 0s; }
+  -webkit-transition: all 0.1s linear 0s;
+  -o-transition: all 0.1s linear 0s;
+  transition: all 0.1s linear 0s;
+}

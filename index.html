@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-  <title>3.3inch x 4inch labels</title>
+  <title>Beer labels</title>
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <link href="app/app.css" media="screen, projection, print" rel="stylesheet" type="text/css">
   <link href="app/buttons.css" media="screen" rel="stylesheet" type="text/css">
@@ -8,46 +8,15 @@
   <script src="app/app.js"></script>
 </head>
 <body id="app">
-  <div class="control-panel">
-    <div>
-      <button class="button toggle" onclick="toggle()" title="Orientation"><i class="orientation"></i></button>
-    </div>
-    <div>
-      <input class="file-upload" type="file" onchange="readURL(this)" title="Upload File">
-    </div>
-    <div id="title-adjust">
-      <label for="title">Title Size</label>
-      <input class="font-adjust" type="number" id="title" value="50">
-    </div>
-    <div id="description-adjust">
-      <label for="description">Description Size</label>
-      <input class="font-adjust" type="number" id="description" value="16">
-    </div>
-  </div>
   <div class="page" id="main">
-    <div class="label" id="0">
-      <h1 class="title content" contenteditable="true" id="title0">Name</h1>
-      <figcaption class="description content" contenteditable="true" id="description0">description</figcaption><img class="image-upload" src><img class="image" src="app/img/Lower Level.svg">
+    <div class="label">
+      <input class="content" contenteditable="true" id="title" type="text" placeholder="Name">
+      <input class="content bold" contenteditable="true" id="description" type="text" placeholder="Description">
+      <input class="content" contenteditable="true" id="style" type="text" placeholder="Style">
+      <input class="content" contenteditable="true" id="alcohol-content" type="text" placeholder="abv"><img class="image-upload" src><img class="image" src="app/img/Lolev_logo.svg">
     </div>
-    <div class="label" id="1">
-      <h1 class="title content" contenteditable="true" id="title1">Name</h1>
-      <figcaption class="description content" contenteditable="true" id="description1">description</figcaption><img class="image-upload" src><img class="image" src="app/img/Lower Level.svg">
-    </div>
-    <div class="label" id="2">
-      <h1 class="title content" contenteditable="true" id="title2">Name</h1>
-      <figcaption class="description content" contenteditable="true" id="description2">description</figcaption><img class="image-upload" src><img class="image" src="app/img/Lower Level.svg">
-    </div>
-    <div class="label" id="3">
-      <h1 class="title content" contenteditable="true" id="title3">Name</h1>
-      <figcaption class="description content" contenteditable="true" id="description3">description</figcaption><img class="image-upload" src><img class="image" src="app/img/Lower Level.svg">
-    </div>
-    <div class="label" id="4">
-      <h1 class="title content" contenteditable="true" id="title4">Name</h1>
-      <figcaption class="description content" contenteditable="true" id="description4">description</figcaption><img class="image-upload" src><img class="image" src="app/img/Lower Level.svg">
-    </div>
-    <div class="label" id="5">
-      <h1 class="title content" contenteditable="true" id="title5">Name</h1>
-      <figcaption class="description content" contenteditable="true" id="description5">description</figcaption><img class="image-upload" src><img class="image" src="app/img/Lower Level.svg">
-    </div>
+    <footer>
+      <div class="sharelink"></div>
+    </footer>
   </div>
 </body>

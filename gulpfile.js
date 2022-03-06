@@ -1,6 +1,6 @@
 var gulp = require('gulp'),
   pug = require('gulp-pug'),
-  sass = require('gulp-sass'),
+  sass = require('gulp-sass')(require('sass')),
   prefix = require('gulp-autoprefixer'),
   browserSync = require('browser-sync').create();
 
