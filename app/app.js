@@ -64,7 +64,7 @@ let paramStore = {
       window.shareLink = new URL(window.location.href).searchParams;
     }
     window.shareLink.set(item.id, item.value);
-    url = window.location.origin+'?'+window.shareLink;
+    url = window.location.href+'?'+window.shareLink;
     console.log(url);
     if (paramStore.check(url)) {
       shareLink[0].innerHTML = url.toString();
