@@ -32,7 +32,7 @@ selector {
 .label {
   height: 4in;
   overflow: hidden;
-  padding: 0.5em;
+  padding: 2em;
   position: relative;
   text-align: center;
   width: 6in;
@@ -58,50 +58,32 @@ selector {
   margin: 0.3em auto;
   width: 100%;
 }
-.content:focus-visible {
-  outline: none;
-}
-.content:-moz-placeholder-shown {
-  background: #ffe2e2;
-}
-.content:-ms-input-placeholder {
-  background: #ffe2e2;
-}
-.content:placeholder-shown {
-  background: #ffe2e2;
+
+.content:empty:before {
+  content: attr(id);
+  color: #999;
+  text-transform: capitalize;
 }
 
 #title {
-  font-size: 50px;
+  font-size: 24px;
   font-weight: 500;
 }
 
-#description {
+#style {
   font-weight: 600;
 }
 
-.desc {
-  font-size: 16px;
-  font-weight: 300;
-  left: 50%;
-  margin: 0;
-  max-width: calc(100% - 1em);
-  position: absolute;
-  top: 50%;
-  -webkit-transform: translate(-50%, -50%);
-      -ms-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
-  width: 100%;
+#abv:after {
+  content:"%"
+}
+#abv:empty:after {
+  content:'';
 }
 
 .image {
-  bottom: 40px;
-  left: 50%;
-  position: absolute;
+  position: relative;
   text-align: center;
-  -webkit-transform: translate(-50%, 0);
-      -ms-transform: translate(-50%, 0);
-          transform: translate(-50%, 0);
   width: 80px;
 }
 

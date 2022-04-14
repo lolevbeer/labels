@@ -1,12 +1,11 @@
 document.addEventListener('DOMContentLoaded', function(event) {
 
   let content = document.getElementsByClassName('content'),
-      adjust = document.getElementsByClassName('font-adjust'),
-      contentArray = Array.from(content),
-      adjustArray = Array.from(adjust);
+      contentArray = Array.from(content);
 
   if (paramStore.check(window.location.href)) {
     contentArray.forEach((item) => {
+      console.log(item)
       paramStore.loadContent(item);
     });
   }
@@ -18,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
           localStore.saveContent(item);
           paramStore.saveContent(item);
           if (item.id == 'title') {
-            document.title = "Beer Label: " + item.value;
+            document.title = "Beer Label: " + item;
           }
         }, false
       );
@@ -35,13 +34,13 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
 let localStore = {
   saveContent: (item) => {
-    localStorage.setItem(item.id, item.value);
+    localStorage.setItem(item.id, item.innerHTML);
   },
   loadContent: (item) => {
     // If url paramters override.
     let content = localStorage.getItem(item.id);
     if (content) {
-      item.value = content;
+      item.innerHTML = content;
     }
     paramStore.saveContent(item);
   },
@@ -53,8 +52,9 @@ let paramStore = {
     let title = params.get('title');
     let description = params.get('description');
     let style = params.get('style');
-    let alcoholContent = params.get('alcohol-content');
-    return title && description && style && alcoholContent;
+        console.log(style)
+    let abv = params.get('abv');
+    return title && description && style && abv;
   },
   saveContent: (item) => {
     let shareLink = document.getElementsByClassName('sharelink'),
@@ -63,9 +63,8 @@ let paramStore = {
     if (!window.shareLink) {
       window.shareLink = new URL(window.location.href).searchParams;
     }
-    window.shareLink.set(item.id, item.value);
+    window.shareLink.set(item.id, item.innerHTML);
     url = window.location.href+'?'+window.shareLink;
-    console.log(url);
     if (paramStore.check(url)) {
       shareLink[0].innerHTML = url.toString();
     }
@@ -75,10 +74,11 @@ let paramStore = {
   },
   loadContent: (item) => {
     let params = new URL(window.location.href).searchParams;
-    // If url paramters override.
+    // If url parameters override.
     let content = params.get(item.id);
+    console.log(item)
     if (content) {
-      item.value = content;
+      item.innerHTML = content;
     }
   },
 };
