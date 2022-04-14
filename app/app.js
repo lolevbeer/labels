@@ -29,24 +29,29 @@ document.addEventListener('DOMContentLoaded', function(event) {
   }
 });
 
+updateQRandTitle = function(content, item) {
+  if (item.id == 'title') {
+    document.title = "Beer Label: " + content;
+    var qrcode = new QRCode({
+      content: "https://beta.lolev.beer#" + content,
+      width: 64,
+      height: 64,
+      color : "#000000",
+      ecl : "M"
+    });
+    let svg = qrcode.svg();
+    console.log(svg)
+    document.getElementById("qr").innerHTML = svg;
+  }
+}
+
 let localStore = {
   saveContent: (item) => {
     localStorage.setItem(item.id, item.innerHTML);
   },
   loadContent: (item) => {
     let content = localStorage.getItem(item.id);
-    if (item.id == 'title') {
-      document.title = "Beer Label: " + content;
-      var qrcode = new QRCode({
-        content: "https://beta.lolev.beer#" + content,
-        width: 64,
-        height: 64,
-        color : "#000000",
-        ecl : "M"
-      });
-      let svg = qrcode.svg();
-      document.getElementById("qr").innerHTML = svg;
-    }
+    updateQRandTitle(content, item);
     if (content) {
       item.innerHTML = content;
     }
@@ -83,7 +88,7 @@ let paramStore = {
     let params = new URL(window.location.href).searchParams;
     // If url parameters override.
     let content = params.get(item.id);
-    console.log(item)
+    updateQRandTitle(content, item);
     if (content) {
       item.innerHTML = content;
     }
