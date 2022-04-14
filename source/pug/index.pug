@@ -4,15 +4,15 @@ head
   meta(http-equiv='content-type' content='text/html; charset=utf-8')
   link(href='app/app.css' media='screen, projection, print' rel='stylesheet' type='text/css')
   link(rel='icon' type='image/svg+xml' href='app/img/Lower Level icon.svg')
+  script(src='app/qrcode.min.js')
   script(src='app/app.js')
 body#app
   #main.page
     .label
-      input(contenteditable="true" id='title' type='text' class='content' placeholder='Name')
-      input(contenteditable="true" id='description' type='text' class='content bold' placeholder='Description')
-      input(contenteditable="true" id='style' type='text' class='content' placeholder='Style')
-      input(contenteditable="true" id='alcohol-content' type='text' class='content' placeholder='abv')
-      img.image-upload(src)
-      img.image(src="app/img/Lolev_logo.svg")
+      img.image(src='app/img/Lolev_logo.svg')
+      p#title.content(contenteditable='true' type='text' data-value='Name')
+      p#style.content(contenteditable='true' type='text')
+      p#abv.content(contenteditable='true' type='text')
+      #qr
     footer
       .sharelink

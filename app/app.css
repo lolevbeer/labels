@@ -9,8 +9,7 @@
 }
 
 body {
-  -webkit-box-sizing: content;
-          box-sizing: content;
+  box-sizing: content;
   font-family: "Poppins";
   margin: 0;
   padding: 0;
@@ -42,9 +41,7 @@ selector {
   font-weight: bold;
   pointer-events: none;
   position: absolute;
-  -webkit-transform: rotate(-45deg);
-      -ms-transform: rotate(-45deg);
-          transform: rotate(-45deg);
+  transform: rotate(-45deg);
   bottom: 53px;
   right: 0;
 }

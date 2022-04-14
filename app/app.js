@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function(event) {
 
   if (paramStore.check(window.location.href)) {
     contentArray.forEach((item) => {
-      console.log(item)
       paramStore.loadContent(item);
     });
   }
@@ -16,9 +15,7 @@ document.addEventListener('DOMContentLoaded', function(event) {
         'blur', () => {
           localStore.saveContent(item);
           paramStore.saveContent(item);
-          if (item.id == 'title') {
-            document.title = "Beer Label: " + item;
-          }
+          localStore.loadContent(item);
         }, false
       );
       item.addEventListener(
@@ -37,8 +34,19 @@ let localStore = {
     localStorage.setItem(item.id, item.innerHTML);
   },
   loadContent: (item) => {
-    // If url paramters override.
     let content = localStorage.getItem(item.id);
+    if (item.id == 'title') {
+      document.title = "Beer Label: " + content;
+      var qrcode = new QRCode({
+        content: "https://beta.lolev.beer#" + content,
+        width: 64,
+        height: 64,
+        color : "#000000",
+        ecl : "M"
+      });
+      let svg = qrcode.svg();
+      document.getElementById("qr").innerHTML = svg;
+    }
     if (content) {
       item.innerHTML = content;
     }
@@ -52,7 +60,6 @@ let paramStore = {
     let title = params.get('title');
     let description = params.get('description');
     let style = params.get('style');
-        console.log(style)
     let abv = params.get('abv');
     return title && description && style && abv;
   },

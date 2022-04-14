@@ -4,16 +4,16 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <link href="app/app.css" media="screen, projection, print" rel="stylesheet" type="text/css">
   <link rel="icon" type="image/svg+xml" href="app/img/Lower Level icon.svg">
+  <script src="app/qrcode.min.js"></script>
   <script src="app/app.js"></script>
 </head>
 <body id="app">
   <div class="page" id="main">
-    <div class="label">
-      <img class="image" src="app/img/Lolev_logo.svg">
-      <p class="content" contenteditable="true" id="title" type="text" data-value="Name"></p>
-      <p class="content" contenteditable="true" id="description" type="text"></p>
-      <p class="content" contenteditable="true" id="style" type="text"></p>
-      <p class="content" contenteditable="true" id="abv" type="text"></p>
+    <div class="label"><img class="image" src="app/img/Lolev_logo.svg">
+      <p class="content" id="title" contenteditable="true" type="text" data-value="Name"></p>
+      <p class="content" id="style" contenteditable="true" type="text"></p>
+      <p class="content" id="abv" contenteditable="true" type="text"></p>
+      <div id="qr"></div>
     </div>
     <footer>
       <div class="sharelink"></div>
