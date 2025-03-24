@@ -102,7 +102,7 @@ export const Label: React.FC<LabelProps> = ({
   const warningLines = wrapText(warningText, 2800, warningFontSize, govWarningWidth + 10);
 
   // Calculate positions for text elements
-  const getYPosition = (index: number) => 326 + (index * LINE_HEIGHT);
+  const getYPosition = (index: number) => 307 + (index * LINE_HEIGHT);
 
   // Define text sections
   const textSections: TextSection[] = [

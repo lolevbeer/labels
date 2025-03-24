@@ -268,6 +268,88 @@ function App() {
         {showForm && (
           <div className="w-96 p-6 bg-gray-100 rounded-lg shadow-md mr-4">
             <div className="space-y-4">
+              {/* Tasting Details Section */}
+              <div className="border border-gray-200 rounded-lg overflow-hidden">
+                <button
+                  onClick={() => toggleSection('tasting')}
+                  className="w-full px-4 py-3 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
+                >
+                  <h3 className="text-lg font-semibold text-gray-900">Tasting Details</h3>
+                  <svg
+                    className={`w-5 h-5 transform transition-transform ${openSections.tasting ? 'rotate-180' : ''}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                <div className={`transition-all duration-300 ease-in-out ${openSections.tasting ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                  <div className="p-4 space-y-4 bg-white">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label htmlFor="abv" className="block text-sm font-medium text-gray-700 mb-1">
+                          ABV
+                        </label>
+                        <input
+                          id="abv"
+                          name="abv"
+                          value={beerDetails.abv}
+                          onChange={handleInputChange}
+                          placeholder="Enter ABV"
+                          type="number"
+                          step="0.1"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+
+                      <div>
+                        <label htmlFor="temperature" className="block text-sm font-medium text-gray-700 mb-1">
+                          Serve At
+                        </label>
+                        <input
+                          id="temperature"
+                          name="temperature"
+                          value={beerDetails.temperature}
+                          onChange={handleInputChange}
+                          placeholder="Enter serving temperature"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
+                        Tasting Notes
+                      </label>
+                      <textarea
+                        id="notes"
+                        name="notes"
+                        value={beerDetails.notes}
+                        onChange={handleInputChange}
+                        placeholder="Enter tasting notes"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={4}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="hops" className="block text-sm font-medium text-gray-700 mb-1">
+                        Hops
+                      </label>
+                      <textarea
+                        id="hops"
+                        name="hops"
+                        value={beerDetails.hops}
+                        onChange={handleInputChange}
+                        placeholder="Enter hop varieties"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows={4}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
               {/* Basic Information Section */}
               <div className="border border-gray-200 rounded-lg overflow-hidden">
                 <button
@@ -316,15 +398,16 @@ function App() {
 
                     <div>
                       <label htmlFor="variant" className="block text-sm font-medium text-gray-700 mb-1">
-                        Variant
+                        Variant (auto-generated)
                       </label>
                       <input
                         id="variant"
                         name="variant"
                         value={beerDetails.variant}
                         onChange={handleInputChange}
-                        placeholder="Enter variant"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Auto-generated from name"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                        readOnly
                       />
                     </div>
 
@@ -345,86 +428,6 @@ function App() {
                 </div>
               </div>
 
-              {/* Tasting Details Section */}
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
-                <button
-                  onClick={() => toggleSection('tasting')}
-                  className="w-full px-4 py-3 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
-                >
-                  <h3 className="text-lg font-semibold text-gray-900">Tasting Details</h3>
-                  <svg
-                    className={`w-5 h-5 transform transition-transform ${openSections.tasting ? 'rotate-180' : ''}`}
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                <div className={`transition-all duration-300 ease-in-out ${openSections.tasting ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                  <div className="p-4 space-y-4 bg-white">
-                    <div>
-                      <label htmlFor="abv" className="block text-sm font-medium text-gray-700 mb-1">
-                        ABV
-                      </label>
-                      <input
-                        id="abv"
-                        name="abv"
-                        value={beerDetails.abv}
-                        onChange={handleInputChange}
-                        placeholder="Enter ABV"
-                        type="number"
-                        step="0.1"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">
-                        Tasting Notes
-                      </label>
-                      <textarea
-                        id="notes"
-                        name="notes"
-                        value={beerDetails.notes}
-                        onChange={handleInputChange}
-                        placeholder="Enter tasting notes"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        rows={4}
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="hops" className="block text-sm font-medium text-gray-700 mb-1">
-                        Hops
-                      </label>
-                      <textarea
-                        id="hops"
-                        name="hops"
-                        value={beerDetails.hops}
-                        onChange={handleInputChange}
-                        placeholder="Enter hop varieties"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        rows={4}
-                      />
-                    </div>
-
-                    <div>
-                      <label htmlFor="temperature" className="block text-sm font-medium text-gray-700 mb-1">
-                        Serve At
-                      </label>
-                      <input
-                        id="temperature"
-                        name="temperature"
-                        value={beerDetails.temperature}
-                        onChange={handleInputChange}
-                        placeholder="Enter serving temperature"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               {/* Label Customization Section */}
               <div className="border border-gray-200 rounded-lg overflow-hidden">
@@ -515,7 +518,12 @@ function App() {
                         <input
                           type="checkbox"
                           checked={showLagerTriangle}
-                          onChange={(e) => setShowLagerTriangle(e.target.checked)}
+                          onChange={(e) => {
+                            setShowLagerTriangle(e.target.checked);
+                            if (e.target.checked) {
+                              setShowMarlboro(false);
+                            }
+                          }}
                           className="sr-only peer"
                         />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -530,7 +538,12 @@ function App() {
                         <input
                           type="checkbox"
                           checked={showMarlboro}
-                          onChange={(e) => setShowMarlboro(e.target.checked)}
+                          onChange={(e) => {
+                            setShowMarlboro(e.target.checked);
+                            if (e.target.checked) {
+                              setShowLagerTriangle(false);
+                            }
+                          }}
                           className="sr-only peer"
                         />
                         <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
