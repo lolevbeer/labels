@@ -123,26 +123,23 @@ function App() {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setBeerDetails((prev) => {
-      // If name is being changed, also update variant
-      if (name === 'name') {
-        const processedVariant = value
-          .toLowerCase()
-          .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
-          .replace(/\s+/g, '-')          // Replace spaces with hyphens
-          .replace(/-+/g, '-')           // Replace multiple hyphens with single hyphen
-          .replace(/^-|-$/g, '');        // Remove hyphens from start and end
-        return {
-          ...prev,
-          [name]: value,
-          variant: processedVariant
-        }
-      }
-      return { ...prev, [name]: value }
-    })
-  }
+  const handleInputChange = (field: string, value: string) => {
+    setBeerDetails(prev => ({
+      ...prev,
+      [field]: value
+    }));
+
+    // Update variant when name changes
+    if (field === 'name') {
+      const variant = value.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+      setBeerDetails(prev => ({
+        ...prev,
+        variant
+      }));
+    }
+  };
 
   const handleColorChange = (colorType: "primary" | "secondary" | "black", value: string) => {
     setLabelColors((prev) => ({ ...prev, [colorType]: value }))
@@ -157,7 +154,7 @@ function App() {
   const handleResetZoom = () => setZoom(1)
 
   // Handle panning
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = () => {
     if (zoom > 1) {
       setIsPanning(true)
     }
@@ -295,7 +292,7 @@ function App() {
                           id="abv"
                           name="abv"
                           value={beerDetails.abv}
-                          onChange={handleInputChange}
+                          onChange={(e) => handleInputChange("abv", e.target.value)}
                           placeholder="Enter ABV"
                           type="number"
                           step="0.1"
@@ -311,7 +308,7 @@ function App() {
                           id="temperature"
                           name="temperature"
                           value={beerDetails.temperature}
-                          onChange={handleInputChange}
+                          onChange={(e) => handleInputChange("temperature", e.target.value)}
                           placeholder="Enter serving temperature"
                           className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
@@ -326,7 +323,7 @@ function App() {
                         id="notes"
                         name="notes"
                         value={beerDetails.notes}
-                        onChange={handleInputChange}
+                        onChange={(e) => handleInputChange("notes", e.target.value)}
                         placeholder="Enter tasting notes"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={4}
@@ -341,7 +338,7 @@ function App() {
                         id="hops"
                         name="hops"
                         value={beerDetails.hops}
-                        onChange={handleInputChange}
+                        onChange={(e) => handleInputChange("hops", e.target.value)}
                         placeholder="Enter hop varieties"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         rows={4}
@@ -376,7 +373,7 @@ function App() {
                         id="name"
                         name="name"
                         value={beerDetails.name}
-                        onChange={handleInputChange}
+                        onChange={(e) => handleInputChange("name", e.target.value)}
                         placeholder="Enter beer name"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -390,7 +387,7 @@ function App() {
                         id="style"
                         name="style"
                         value={beerDetails.style}
-                        onChange={handleInputChange}
+                        onChange={(e) => handleInputChange("style", e.target.value)}
                         placeholder="Enter beer style"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -404,7 +401,7 @@ function App() {
                         id="variant"
                         name="variant"
                         value={beerDetails.variant}
-                        onChange={handleInputChange}
+                        onChange={(e) => handleInputChange("variant", e.target.value)}
                         placeholder="Auto-generated from name"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
                         readOnly
@@ -419,7 +416,7 @@ function App() {
                         id="upc"
                         name="upc"
                         value={beerDetails.upc}
-                        onChange={handleInputChange}
+                        onChange={(e) => handleInputChange("upc", e.target.value)}
                         placeholder="Enter UPC"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -660,10 +657,11 @@ function App() {
                   abv={beerDetails.abv}
                   notes={beerDetails.notes}
                   hops={beerDetails.hops}
-                  temp={beerDetails.temperature}
+                  temperature={beerDetails.temperature}
+                  upc={beerDetails.upc}
                   primaryColor={labelColors.primary}
                   secondaryColor={labelColors.secondary}
-                  blackColor={labelColors.black}
+                  textColor={labelColors.black}
                   showMargins={showMargins}
                   showQR={showQR}
                   showBarcode={showBarcode}
@@ -671,7 +669,6 @@ function App() {
                   showLagerTriangle={showLagerTriangle}
                   showMarlboro={showMarlboro}
                   warningFontSize={60}
-                  variant={beerDetails.variant}
                 />
               </div>
             </div>

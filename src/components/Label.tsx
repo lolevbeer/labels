@@ -1,15 +1,17 @@
 import React from 'react';
-import { logo } from './icons/logo';
+import { logo } from './icons/Logo';
+
 interface LabelProps {
   name: string;
   style: string;
   abv: string;
-  notes?: string;
-  hops?: string;
-  temp: string;
+  notes: string;
+  hops: string;
+  temperature: string;
+  upc: string;
   primaryColor: string;
   secondaryColor: string;
-  blackColor: string;
+  textColor: string;
   showMargins: boolean;
   showQR: boolean;
   showBarcode: boolean;
@@ -17,7 +19,6 @@ interface LabelProps {
   showLagerTriangle: boolean;
   showMarlboro: boolean;
   warningFontSize: number;
-  variant?: string;
 }
 
 interface TextSection {
@@ -53,33 +54,33 @@ export const Label: React.FC<LabelProps> = ({
   name,
   style,
   abv,
-  notes = "",
-  hops = "",
-  temp,
+  notes,
+  hops,
+  temperature,
+  // upc,
   primaryColor,
   secondaryColor,
-  blackColor,
+  textColor,
   showMargins,
   showQR,
   showBarcode,
   showBleed,
   showLagerTriangle,
   showMarlboro,
-  warningFontSize = 60,
-  variant
+  warningFontSize,
 }) => {
   // Check for missing required fields
   const missingFields = [];
   if (!name) missingFields.push("Name");
   if (!style) missingFields.push("Style");
   if (!abv) missingFields.push("ABV");
-  if (!temp) missingFields.push("Temperature");
+  if (!temperature) missingFields.push("Temperature");
 
   // If any required fields are missing, show a message
   if (missingFields.length > 0) {
     return (
       <div style={{ backgroundColor: primaryColor, padding: '20px', textAlign: 'center' }}>
-        <p style={{ color: blackColor, fontFamily: 'Poppins', fontSize: '16px' }}>
+        <p style={{ color: textColor, fontFamily: 'Poppins', fontSize: '16px' }}>
           Please fill in the following required fields: {missingFields.join(", ")}
         </p>
       </div>
@@ -132,7 +133,7 @@ export const Label: React.FC<LabelProps> = ({
   // Add serve at temperature
   textSections.push(
     { title: "SERVE AT", content: "", isBold: true },
-    { content: `${temp}°F`, isBold: false }
+    { content: `${temperature}°F`, isBold: false }
   );
 
   // Render text sections
@@ -174,7 +175,7 @@ export const Label: React.FC<LabelProps> = ({
               <polygon id="Marlboro" points="0 0 4876 0 4876 3078 2441.94651 895.985939 0 3078" />
             )}
           </g>
-          <g id="static" transform="translate(-2.000000, -3.000000)" fill={blackColor}>
+          <g id="static" transform="translate(-2.000000, -3.000000)" fill={textColor}>
             <text id="socialAddress" transform="translate(3855.295002, 1560.150088) rotate(-90.000000) translate(-3855.295002, -1560.150088) " fontFamily="Poppins" fontSize="125" fontWeight="bold">
               <tspan x="2580" y="1700">@lolevbeer</tspan>
               <tspan x="3470" y="1700" fontFamily="Poppins" fontWeight="500">Butler Street, Pittsburgh, PA</tspan>
@@ -190,7 +191,7 @@ export const Label: React.FC<LabelProps> = ({
             <text id="StoreCold" fillRule="nonzero" transform="translate(4558.066583, 898.985939) rotate(-90.000000) translate(-4558.066583, -898.985939) " fontFamily="Poppins-Bold, Poppins" fontSize="175" letterSpacing="10">
               <tspan x="4040" y="970">STORE COLD</tspan>
             </text>
-            <g id="logo" transform="translate(2016, 1100)" fill={blackColor} fillRule="nonzero">
+            <g id="logo" transform="translate(2016, 1100)" fill={textColor} fillRule="nonzero">
               <g>
                 {logo}
               </g>
@@ -200,16 +201,16 @@ export const Label: React.FC<LabelProps> = ({
             </text>
           </g>
           {showBarcode && (
-            <rect id="Barcode" stroke={blackColor} strokeDasharray="30" x="4345" y="2005" width="280" height="819" />
+            <rect id="Barcode" stroke={textColor} strokeDasharray="30" x="4345" y="2005" width="280" height="819" />
           )}
           {showQR && (
-            <rect id="QR" stroke={blackColor} strokeDasharray="30" x="250" y="2410" width="415" height="415" />
+            <rect id="QR" stroke={textColor} strokeDasharray="30" x="250" y="2410" width="415" height="415" />
           )}
-          <text id="nameStyle" fontFamily="Poppins" fontSize="150" fontWeight="bold" letterSpacing="18" fill={blackColor} textAnchor="middle">
+          <text id="nameStyle" fontFamily="Poppins" fontSize="150" fontWeight="bold" letterSpacing="18" fill={textColor} textAnchor="middle">
             <tspan x="2438" y="2606">{name.toUpperCase()}</tspan>
             <tspan x="2438" y="2822" fontFamily="Poppins" fontSize="130" fontWeight="500" letterSpacing="12">{style.toUpperCase()}</tspan>
           </text>
-          <text id="abvNotesHopsTemp" fontFamily="Poppins" fontSize="80" fontWeight="bold" fill={blackColor}>
+          <text id="abvNotesHopsTemp" fontFamily="Poppins" fontSize="80" fontWeight="bold" fill={textColor}>
             {textSections.map((section, index) => renderTextSection(section, index))}
           </text>
           {showBleed && (
