@@ -1,5 +1,6 @@
 import React from 'react'
-import { Label } from './components/Label'
+import { Label } from './components/ui/label'
+import { Sketch } from '@uiw/react-color'
 
 function App() {
   const [beerDetails, setBeerDetails] = React.useState({
@@ -14,9 +15,9 @@ function App() {
   })
 
   const [labelColors, setLabelColors] = React.useState({
-    primary: "#FFFFFF",
-    secondary: "#EEEEEE",
-    black: "#000000",
+    primary: { c: 0, m: 0, y: 0, k: 0 },
+    secondary: { c: 0, m: 0, y: 0, k: 10 },
+    black: { c: 0, m: 0, y: 0, k: 100 },
   })
 
   const [showForm] = React.useState(true)
@@ -36,6 +37,65 @@ function App() {
     customization: false,
     advanced: false
   })
+  const [openColorPicker, setOpenColorPicker] = React.useState<"primary" | "secondary" | "black" | null>(null)
+
+  // CMYK to RGB conversion function
+  const cmykToRgb = (cmyk: { c: number, m: number, y: number, k: number }) => {
+    const { c, m, y, k } = cmyk
+    const r = 255 * (1 - c/100) * (1 - k/100)
+    const g = 255 * (1 - m/100) * (1 - k/100)
+    const b = 255 * (1 - y/100) * (1 - k/100)
+    return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`
+  }
+
+  // CMYK to Hex conversion function (for URL parameters)
+  const cmykToHex = (cmyk: { c: number, m: number, y: number, k: number }) => {
+    const rgb = cmykToRgb(cmyk)
+    const result = /^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/.exec(rgb)
+    if (!result) return '#000000'
+    const r = parseInt(result[1])
+    const g = parseInt(result[2])
+    const b = parseInt(result[3])
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
+  }
+
+  // Hex to CMYK conversion function (for URL parameters)
+  const hexToCmyk = (hex: string) => {
+    const r = parseInt(hex.slice(1, 3), 16) / 255
+    const g = parseInt(hex.slice(3, 5), 16) / 255
+    const b = parseInt(hex.slice(5, 7), 16) / 255
+    
+    const k = 1 - Math.max(r, g, b)
+    const c = k === 1 ? 0 : ((1 - r - k) / (1 - k)) * 100
+    const m = k === 1 ? 0 : ((1 - g - k) / (1 - k)) * 100
+    const y = k === 1 ? 0 : ((1 - b - k) / (1 - k)) * 100
+    
+    return {
+      c: Math.round(c),
+      m: Math.round(m),
+      y: Math.round(y),
+      k: Math.round(k * 100)
+    }
+  }
+
+  // RGB to CMYK conversion
+  const rgbToCmyk = (r: number, g: number, b: number) => {
+    const red = r / 255
+    const green = g / 255
+    const blue = b / 255
+    
+    const k = 1 - Math.max(red, green, blue)
+    const c = k === 1 ? 0 : ((1 - red - k) / (1 - k)) * 100
+    const m = k === 1 ? 0 : ((1 - green - k) / (1 - k)) * 100
+    const y = k === 1 ? 0 : ((1 - blue - k) / (1 - k)) * 100
+    
+    return {
+      c: Math.round(c),
+      m: Math.round(m),
+      y: Math.round(y),
+      k: Math.round(k * 100)
+    }
+  }
 
   // Load configuration from URL parameters
   React.useEffect(() => {
@@ -71,9 +131,9 @@ function App() {
 
     if (primary || secondary || black) {
       setLabelColors({
-        primary: primary || "#FFFFFF",
-        secondary: secondary || "#EEEEEE",
-        black: black || "#000000",
+        primary: primary ? hexToCmyk(primary) : { c: 0, m: 0, y: 0, k: 0 },
+        secondary: secondary ? hexToCmyk(secondary) : { c: 0, m: 0, y: 0, k: 10 },
+        black: black ? hexToCmyk(black) : { c: 0, m: 0, y: 0, k: 100 },
       });
     }
 
@@ -96,9 +156,9 @@ function App() {
     });
 
     // Add colors
-    Object.entries(labelColors).forEach(([key, value]) => {
-      params.append(key, value);
-    });
+    params.append('primary', cmykToHex(labelColors.primary));
+    params.append('secondary', cmykToHex(labelColors.secondary));
+    params.append('black', cmykToHex(labelColors.black));
 
     // Add toggles
     params.append('margins', showMargins.toString());
@@ -141,8 +201,32 @@ function App() {
     }
   };
 
-  const handleColorChange = (colorType: "primary" | "secondary" | "black", value: string) => {
-    setLabelColors((prev) => ({ ...prev, [colorType]: value }))
+  const handleColorChange = (colorType: "primary" | "secondary" | "black", channel: "c" | "m" | "y" | "k", value: string) => {
+    const numValue = Math.max(0, Math.min(100, Number(value) || 0))
+    setLabelColors((prev) => ({
+      ...prev,
+      [colorType]: {
+        ...prev[colorType],
+        [channel]: numValue
+      }
+    }))
+  }
+
+  // Handle color picker change
+  const handleColorPickerChange = (colorType: "primary" | "secondary" | "black", color: { hex: string }) => {
+    // Convert hex to RGB
+    const r = parseInt(color.hex.slice(1, 3), 16)
+    const g = parseInt(color.hex.slice(3, 5), 16)
+    const b = parseInt(color.hex.slice(5, 7), 16)
+    
+    // Convert RGB to CMYK
+    const cmyk = rgbToCmyk(r, g, b)
+    
+    // Update color state
+    setLabelColors(prev => ({
+      ...prev,
+      [colorType]: cmyk
+    }))
   }
 
   const toggleSection = (section: keyof typeof openSections) => {
@@ -446,70 +530,229 @@ function App() {
                   <div className="p-4 space-y-4 bg-white">
                     <div>
                       <label htmlFor="primaryColor" className="block text-sm font-medium text-gray-700 mb-1">
-                        Background
+                        Background (CMYK)
                       </label>
-                      <div className="flex items-center space-x-2">
-                        <input
-                          id="primaryColor"
-                          type="color"
-                          value={labelColors.primary}
-                          onChange={(e) => handleColorChange("primary", e.target.value)}
-                          className="w-8 h-8 p-1 border border-gray-300 rounded-md"
+                      <div className="flex items-center space-x-4">
+                        <div 
+                          className="w-10 h-9 rounded-md cursor-pointer border border-gray-300"
+                          style={{ backgroundColor: cmykToRgb(labelColors.primary), marginTop: '24px' }}
+                          onClick={() => setOpenColorPicker(openColorPicker === "primary" ? null : "primary")}
                         />
-                        <input
-                          type="text"
-                          value={labelColors.primary}
-                          onChange={(e) => handleColorChange("primary", e.target.value)}
-                          className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                        <div className="flex space-x-1">
+                          <div>
+                            <label className="text-xs text-gray-500">C</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.primary.c}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-500">M</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.primary.m}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-500">Y</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.primary.y}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-500">K</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.primary.k}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                        </div>
+                        {openColorPicker === "primary" && (
+                          <div className="absolute z-10 mt-2">
+                            <div 
+                              className="fixed inset-0" 
+                              onClick={() => setOpenColorPicker(null)}
+                            />
+                            <div className="relative">
+                              <Sketch
+                                color={cmykToHex(labelColors.primary)}
+                                onChange={(color) => handleColorPickerChange("primary", color)}
+                                style={{ width: '300px' }}
+                              />
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     <div>
                       <label htmlFor="secondaryColor" className="block text-sm font-medium text-gray-700 mb-1">
-                        Secondary Background
+                        Secondary Background (CMYK)
                       </label>
-                      <div className="flex items-center space-x-2">
-                        <input
-                          id="secondaryColor"
-                          type="color"
-                          value={labelColors.secondary}
-                          onChange={(e) => handleColorChange("secondary", e.target.value)}
-                          className="w-8 h-8 p-1 border border-gray-300 rounded-md"
+                      <div className="flex items-center space-x-4">
+                        <div 
+                          className="w-10 h-9 rounded-md cursor-pointer border border-gray-300"
+                          style={{ backgroundColor: cmykToRgb(labelColors.secondary), marginTop: '24px' }}
+                          onClick={() => setOpenColorPicker(openColorPicker === "secondary" ? null : "secondary")}
                         />
-                        <input
-                          type="text"
-                          value={labelColors.secondary}
-                          onChange={(e) => handleColorChange("secondary", e.target.value)}
-                          className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                        <div className="flex space-x-1">
+                          <div>
+                            <label className="text-xs text-gray-500">C</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.secondary.c}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-500">M</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.secondary.m}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-500">Y</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.secondary.y}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-500">K</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.secondary.k}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                        </div>
+                        {openColorPicker === "secondary" && (
+                          <div className="absolute z-10 mt-2">
+                            <div 
+                              className="fixed inset-0" 
+                              onClick={() => setOpenColorPicker(null)}
+                            />
+                            <div className="relative">
+                              <Sketch
+                                color={cmykToHex(labelColors.secondary)}
+                                onChange={(color) => handleColorPickerChange("secondary", color)}
+                                style={{ width: '300px' }}
+                              />
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     <div>
                       <label htmlFor="blackColor" className="block text-sm font-medium text-gray-700 mb-1">
-                        Text Color
+                        Text Color (CMYK)
                       </label>
-                      <div className="flex items-center space-x-2">
-                        <input
-                          id="blackColor"
-                          type="color"
-                          value={labelColors.black}
-                          onChange={(e) => handleColorChange("black", e.target.value)}
-                          className="w-8 h-8 p-1 border border-gray-300 rounded-md"
+                      <div className="flex items-center space-x-4">
+                        <div 
+                          className="w-10 h-9 rounded-md cursor-pointer border border-gray-300"
+                          style={{ backgroundColor: cmykToRgb(labelColors.black), marginTop: '24px' }}
+                          onClick={() => setOpenColorPicker(openColorPicker === "black" ? null : "black")}
                         />
-                        <input
-                          type="text"
-                          value={labelColors.black}
-                          onChange={(e) => handleColorChange("black", e.target.value)}
-                          className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
+                        <div className="flex space-x-1">
+                          <div>
+                            <label className="text-xs text-gray-500">C</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.black.c}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-500">M</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.black.m}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-500">Y</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.black.y}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-xs text-gray-500">K</label>
+                            <input
+                              type="number"
+                              min="0"
+                              max="100"
+                              value={labelColors.black.k}
+                              disabled
+                              className="w-16 px-2 py-1 border border-gray-300 rounded-md bg-gray-50 text-gray-500 cursor-not-allowed"
+                            />
+                          </div>
+                        </div>
+                        {openColorPicker === "black" && (
+                          <div className="absolute z-10 mt-2">
+                            <div 
+                              className="fixed inset-0" 
+                              onClick={() => setOpenColorPicker(null)}
+                            />
+                            <div className="relative">
+                              <Sketch
+                                color={cmykToHex(labelColors.black)}
+                                onChange={(color) => handleColorPickerChange("black", color)}
+                                style={{ width: '300px' }}
+                              />
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between">
                       <label htmlFor="showLagerTriangle" className="text-sm font-medium text-gray-700">
-                        Show Lager Triangle
+                        Lager Triangle
                       </label>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -529,7 +772,7 @@ function App() {
 
                     <div className="flex items-center justify-between">
                       <label htmlFor="showMarlboro" className="text-sm font-medium text-gray-700">
-                        Show Marlboro
+                        Marlboro
                       </label>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -659,9 +902,9 @@ function App() {
                   hops={beerDetails.hops}
                   temperature={beerDetails.temperature}
                   upc={beerDetails.upc}
-                  primaryColor={labelColors.primary}
-                  secondaryColor={labelColors.secondary}
-                  textColor={labelColors.black}
+                  primaryColor={cmykToRgb(labelColors.primary)}
+                  secondaryColor={cmykToRgb(labelColors.secondary)}
+                  textColor={cmykToRgb(labelColors.black)}
                   showMargins={showMargins}
                   showQR={showQR}
                   showBarcode={showBarcode}
@@ -714,7 +957,7 @@ function App() {
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                   </svg>
-                  <span>Share</span>
+                  <span>Copy</span>
                 </button>
                 <button
                   onClick={handleDownload}
