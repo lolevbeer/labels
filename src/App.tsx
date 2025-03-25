@@ -533,7 +533,7 @@ function App() {
                   onClick={() => toggleSection('customization')}
                   className="w-full px-4 py-3 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
                 >
-                  <h3 className="text-lg font-semibold text-gray-900">Label Customization</h3>
+                  <h3 className="text-lg font-semibold text-gray-900">Label</h3>
                   <svg
                     className={`w-5 h-5 transform transition-transform ${openSections.customization ? 'rotate-180' : ''}`}
                     fill="none"
@@ -844,6 +844,36 @@ function App() {
                     </div>
 
                     <div className="flex items-center justify-between">
+                      <label htmlFor="showQR" className="text-sm font-medium text-gray-700">
+                        QR Code Guide
+                      </label>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={showQR}
+                          onChange={(e) => setShowQR(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <label htmlFor="showBarcode" className="text-sm font-medium text-gray-700">
+                        Barcode Guide
+                      </label>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={showBarcode}
+                          onChange={(e) => setShowBarcode(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      </label>
+                    </div>
+
+                    <div className="flex items-center justify-between">
                       <label htmlFor="showBleed" className="text-sm font-medium text-gray-700">
                         Show Bleed
                       </label>
@@ -893,8 +923,8 @@ function App() {
                   secondaryColor={cmykToRgb(labelColors.secondary)}
                   textColor={cmykToRgb(labelColors.black)}
                   showMargins={showMargins}
-                  showQR={showQR && !beerDetails.variant}
-                  showBarcode={showBarcode && !(/^\d{12}$/.test(beerDetails.upc))}
+                  showQR={showQR}
+                  showBarcode={showBarcode}
                   showBleed={showBleed}
                   showLagerTriangle={showLagerTriangle}
                   showMarlboro={showMarlboro}

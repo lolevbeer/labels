@@ -24,7 +24,7 @@ const Barcode: React.FC<BarcodeProps> = ({ upc, textColor = 'currentColor' }) =>
     if (upc && isValidUPC(upc) && barcodeRef.current) {
       JsBarcode(barcodeRef.current, upc, {
         format: "upc",
-        width: 1,
+        width: 1.03,
         height: 15,
         textMargin: 0,
         font: "Poppins",
@@ -39,16 +39,8 @@ const Barcode: React.FC<BarcodeProps> = ({ upc, textColor = 'currentColor' }) =>
   return (
     <svg 
       ref={barcodeRef}
-      id="barcode"
       jsbarcode-format="upc"
       jsbarcode-value={upc}
-      jsbarcode-textmargin="0"
-      jsbarcode-fontoptions="normal"
-      jsbarcode-background="transparent"
-      jsbarcode-font="Poppins"
-      jsbarcode-height="15"
-      jsbarcode-width="2"
-      jsbarcode-linecolor="currentColor"
     />
   );
 };

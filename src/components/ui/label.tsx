@@ -190,12 +190,12 @@ export const Label: React.FC<LabelProps> = ({
             <text id="warning" transform="translate(4142, 1550) rotate(-90.000000) translate(-4142.783559, -1566.616641) " fontFamily="Poppins" fontSize={warningFontSize} fontWeight="bold">
               <tspan id="government-warning" x="2862" y="1520">GOVERNMENT WARNING:</tspan>
               {warningLines.map((line, index) => (
-                <tspan key={index} x={index === 0 ? firstLineX : "2864"} y={1520 + (index * 75)} fontFamily="Poppins" fontWeight="300">
+                <tspan key={index} x={index === 0 ? firstLineX : "2864"} y={1520 + (index * 75)} fontFamily="Poppins-Medium, Poppins" fontWeight="Medium">
                   {line}
                 </tspan>
               ))}
             </text>
-            <text id="StoreCold" fillRule="nonzero" transform="translate(4558.066583, 898.985939) rotate(-90.000000) translate(-4558.066583, -898.985939) " fontFamily="Poppins-Bold, Poppins" fontSize="175" letterSpacing="10">
+            <text id="StoreCold" fillRule="nonzero" transform="translate(4558.066583, 898.985939) rotate(-90.000000) translate(-4558.066583, -898.985939) " fontFamily="Poppins-Bold, Poppins" fontWeight="bold" fontSize="175" letterSpacing="10">
               <tspan x="4040" y="970">STORE COLD</tspan>
             </text>
             <g id="logo" transform="translate(2016, 1100)" fill={textColor} fillRule="nonzero">
@@ -226,7 +226,7 @@ export const Label: React.FC<LabelProps> = ({
               </g>
             ) : null}
             {showBarcode && (
-              <rect x="4345" y="2005" width="280" height="819" stroke={textColor} strokeDasharray="30" strokeWidth="5" fill="none" />
+              <rect x="4463px" y="2005" width="160" height="819" stroke={textColor} strokeDasharray="30" strokeWidth="5" fill="none" />
             )}
           </g>
           <text id="nameStyle" fontFamily="Poppins" fontSize="150" fontWeight="bold" letterSpacing="18" fill={textColor} textAnchor="middle">
