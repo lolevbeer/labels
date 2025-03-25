@@ -31,9 +31,14 @@ function App() {
   const [pan, setPan] = React.useState({ x: 0, y: 0 })
   const [isPanning, setIsPanning] = React.useState(false)
   const previewRef = React.useRef<HTMLDivElement>(null)
-  const [openSections, setOpenSections] = React.useState({
+  const [openSections, setOpenSections] = React.useState<{
+    basic: boolean;
+    tasting: boolean;
+    customization: boolean;
+    advanced: boolean;
+  }>({
     basic: true,
-    tasting: true,
+    tasting: false,
     customization: false,
     advanced: false
   })
@@ -230,7 +235,19 @@ function App() {
   }
 
   const toggleSection = (section: keyof typeof openSections) => {
-    setOpenSections(prev => ({ ...prev, [section]: !prev[section] }))
+    setOpenSections(prev => {
+      // Create a new object with all sections set to false
+      const allClosed = Object.keys(prev).reduce((acc, key) => ({
+        ...acc,
+        [key]: false
+      }), {} as typeof prev);
+      
+      // Toggle the clicked section (if it was open, it will be closed; if it was closed, it will be opened)
+      return {
+        ...allClosed,
+        [section]: !prev[section]
+      };
+    });
   }
 
   const handleZoomIn = () => setZoom(prev => Math.min(prev + 0.25, 3))
