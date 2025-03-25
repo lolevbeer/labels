@@ -906,8 +906,8 @@ function App() {
                   secondaryColor={cmykToRgb(labelColors.secondary)}
                   textColor={cmykToRgb(labelColors.black)}
                   showMargins={showMargins}
-                  showQR={showQR}
-                  showBarcode={showBarcode}
+                  showQR={showQR && !beerDetails.variant}
+                  showBarcode={showBarcode && !(/^\d{12}$/.test(beerDetails.upc))}
                   showBleed={showBleed}
                   showLagerTriangle={showLagerTriangle}
                   showMarlboro={showMarlboro}

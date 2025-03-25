@@ -3,8 +3,12 @@
 import React, { useEffect, useRef } from 'react';
 import JsBarcode from 'jsbarcode';
 
-const Barcode: React.FC = () => {
-  const { value: upc } = useField<string>({ path: 'upc' });
+interface BarcodeProps {
+  upc: string;
+  textColor?: string;
+}
+
+const Barcode: React.FC<BarcodeProps> = ({ upc, textColor = 'currentColor' }) => {
   const barcodeRef = useRef<SVGSVGElement>(null);
 
   const isValidUPC = (code: string): boolean => {
@@ -26,58 +30,26 @@ const Barcode: React.FC = () => {
         font: "Poppins",
         fontOptions: "normal",
         background: "transparent",
-        lineColor: "currentColor"
+        lineColor: textColor,
+        margin: 0
       });
     }
-  }, [upc]);
-
-  const handleDownload = () => {
-    if (barcodeRef.current) {
-      // Temporarily set the color to black for download
-      barcodeRef.current.querySelectorAll('rect, text').forEach(el => {
-        el.setAttribute('fill', 'black');
-      });
-
-      const svgData = new XMLSerializer().serializeToString(barcodeRef.current);
-      const svgBlob = new Blob([svgData], {type: "image/svg+xml;charset=utf-8"});
-      const svgUrl = URL.createObjectURL(svgBlob);
-      const downloadLink = document.createElement("a");
-      downloadLink.href = svgUrl;
-      downloadLink.download = `barcode_${upc}.svg`;
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-
-      // Reset the color back to currentColor
-      barcodeRef.current.querySelectorAll('rect, text').forEach(el => {
-        el.setAttribute('fill', 'currentColor');
-      });
-    }
-  };
-
-  if (!upc) {
-    return <div><i>No UPC provided</i></div>;
-  }
+  }, [upc, textColor]);
 
   return (
-    <span>
-      <svg 
-        ref={barcodeRef}
-        id="barcode"
-        jsbarcode-format="upc"
-        jsbarcode-value={upc}
-        jsbarcode-textmargin="0"
-        jsbarcode-fontoptions="normal"
-        jsbarcode-background="transparent"
-        jsbarcode-font="Poppins"
-        jsbarcode-height="15"
-        jsbarcode-width="2"
-        jsbarcode-linecolor="currentColor"
-      ></svg>
-      <div>
-        <button className="btn btn--style-primary" onClick={handleDownload}>Download Barcode</button>
-      </div>
-    </span>
+    <svg 
+      ref={barcodeRef}
+      id="barcode"
+      jsbarcode-format="upc"
+      jsbarcode-value={upc}
+      jsbarcode-textmargin="0"
+      jsbarcode-fontoptions="normal"
+      jsbarcode-background="transparent"
+      jsbarcode-font="Poppins"
+      jsbarcode-height="15"
+      jsbarcode-width="2"
+      jsbarcode-linecolor="currentColor"
+    />
   );
 };
 

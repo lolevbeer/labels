@@ -1,5 +1,7 @@
 import React from 'react';
 import { logo } from '../icons/Logo';
+import BeerQR from '../elements/BeerQR';
+import Barcode from '../elements/Barcode';
 
 interface LabelProps {
   name: string;
@@ -57,7 +59,7 @@ export const Label: React.FC<LabelProps> = ({
   notes,
   hops,
   temperature,
-  // upc,
+  upc,
   primaryColor,
   secondaryColor,
   textColor,
@@ -161,6 +163,11 @@ export const Label: React.FC<LabelProps> = ({
     return <tspan key={`empty-${index}`} x="250" y={y}></tspan>;
   };
 
+  // Generate URL-safe variant from name
+  const variant = name.toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+
   return (
     <div style={{ backgroundColor: primaryColor }}>
       <svg id="label-svg" width="800px" height="504px" viewBox="0 0 4876 3076" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
@@ -200,12 +207,24 @@ export const Label: React.FC<LabelProps> = ({
               <tspan x="2438" y="415">LOLEV BEER</tspan>
             </text>
           </g>
-          {showBarcode && (
-            <rect id="Barcode" stroke={textColor} strokeDasharray="30" x="4345" y="2005" width="280" height="819" />
-          )}
-          {showQR && (
-            <rect id="QR" stroke={textColor} strokeDasharray="30" x="250" y="2410" width="415" height="415" />
-          )}
+          {/* QR Code Area */}
+          <g>
+            {variant ? (
+              <g transform="translate(250, 2410)">
+                <BeerQR variant={variant} textColor={textColor} />
+              </g>
+            ) : null}
+            <rect x="250" y="2410" width="415" height="415" stroke={textColor} strokeDasharray="30" fill="none" />
+          </g>
+          {/* Barcode Area */}
+          <g>
+            {upc && /^\d{12}$/.test(upc) ? (
+              <g transform="translate(4465,2890) rotate(-90) scale(8)">
+                <Barcode upc={upc} textColor={textColor} />
+              </g>
+            ) : null}
+            <rect x="4345" y="2005" width="280" height="819" stroke={textColor} strokeDasharray="30" fill="none" />
+          </g>
           <text id="nameStyle" fontFamily="Poppins" fontSize="150" fontWeight="bold" letterSpacing="18" fill={textColor} textAnchor="middle">
             <tspan x="2438" y="2606">{name.toUpperCase()}</tspan>
             <tspan x="2438" y="2822" fontFamily="Poppins" fontSize="130" fontWeight="500" letterSpacing="12">{style.toUpperCase()}</tspan>

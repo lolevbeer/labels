@@ -17,8 +17,11 @@
     "@uiw/react-color": "^2.4.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
-    "qrcode.react": "^3.1.0",
+    "jsbarcode": "^3.11.6",
+    "qr-code-styling": "^1.9.1",
+    "qrcode.react": "^3.2.0",
     "react": "^18.2.0",
+    "react-barcode": "^1.6.1",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.2.1"
   },
